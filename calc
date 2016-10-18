@@ -1,0 +1,28 @@
+#!/usr/bin/python
+import math
+
+def parse(tree, stack):
+    for token in tree:
+        n2 = stack.pop()
+        n1 = stack.pop()
+        stack += {
+            'pop'  : lambda n1, n2: [n1],
+            'flip' : lambda n1, n2: [n2, n1],
+            '+'    : lambda n1, n2: [n1 + n2],
+            '-'    : lambda n1, n2: [n1 - n2],
+            '*'    : lambda n1, n2: [n1 * n2],
+            '/'    : lambda n1, n2: [n1 / n2],
+            '^'    : lambda n1, n2: [n1**n2],
+            'log'  : lambda n1, n2: [math.log(n1, n2)],
+            'abs'  : lambda n1, n2: [n1, abs(n2)],
+            'e'    : lambda n1, n2: [n1, n2, math.exp(1)],
+        }.get(token, lambda n1, n2: [n1, n2, float(token)])(n1, n2)
+
+try:
+    stack = [None, None]
+    while True:
+        line = input("> ")
+        parse(line.split(" "), stack)
+        print(stack[-1])
+except:
+    exit()
